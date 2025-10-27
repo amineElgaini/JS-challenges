@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      .clock {
+        width: 200px;
+        height: 200px;
+        border: 1px dashed black;
+        border-radius: 50%;
+        position: relative;
+      }
+      .seconds-arrow,
+      .minutes-arrow,
+      .hours-arrow {
+        position: absolute;
+        width: 4px;
+        bottom: 50%;
+        right: 50%;
+        border-start-end-radius: 50%;
+        border-start-start-radius: 50%;
+        transform-origin: bottom;
+      }
+      .seconds-arrow {
+        background-color: rgba(0, 128, 0, 0.462);
+        height: 50%;
+      }
+      .minutes-arrow {
+        background-color: rgba(255, 0, 0, 0.522);
+        height: 45%;
+      }
+      .hours-arrow {
+        background-color: rgba(0, 0, 0, 0.478);
+        height: 40%;
+      }
+      /* .test {
+        height: 20px;
+        width: 5px;
+        background-color: black;
+        position: absolute;
+        top: 0;
+
+      } */
+    </style>
+    <div class="clock">
+      <span class="test"></span>
+      <span class="seconds-arrow"></span>
+      <span class="minutes-arrow"></span>
+      <span class="hours-arrow"></span>
+    </div>
+    <script>
+      // let clock = document.querySelector(".clock");
+      // clock.prepend = 1;
+      // for (let i = 1;i<=12;i++) {
+      //   let span = document.createElement("span");
+      // }
+      let seconds = 0;
+      let minutes = 0;
+      let hours = 0;
+      let secondsArrow = document.querySelector(".seconds-arrow");
+      let minutesArrow = document.querySelector(".minutes-arrow");
+      let hoursArrow = document.querySelector(".hours-arrow");
+
+      setInterval(() => {
+        secondsArrow.style.cssText = `
+        transform:  rotate(${seconds}deg);
+        `;
+        minutesArrow.style.cssText = `
+        transform:  rotate(${minutes}deg);
+        `;
+        hoursArrow.style.cssText = `
+        transform:  rotate(${hours}deg);
+        `;
+        seconds += 6;
+        if (seconds === 360) {
+          seconds = 0;
+          minutes += 6;
+        }
+        if (minutes == 360) {
+          minutes = 0;
+          hours += 6;
+        }
+        if (hours == 360) {
+          hours = 0;
+        }
+      }, 1000);
+    </script>
+    <script src="./main.js"></script>
+  </body>
+</html>

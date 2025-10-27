@@ -44,4 +44,3 @@ img {
 img:not(:first-child) {
   transform: translateX(100%);
 }
-

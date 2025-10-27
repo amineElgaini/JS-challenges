@@ -20,9 +20,11 @@ const right = document.querySelector(".right");
 let prev = 0;
 let next = 0;
 let isAnimating = false;
+
 left.addEventListener("click", () => {
   if (isAnimating) return;
   isAnimating = true;
+
   next = (prev + 1) % imgs.length;
 
   imgs[next].style.transition = "none";
