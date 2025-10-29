@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link href="./../../output.css" rel="stylesheet" />
+    <title>Document</title>
+  </head>
+  <body>
+    <section class="container mx-auto">
+      <button
+        class="button-add-task mb-5 bg-green-500 hover:bg-green-700 text-white mt-2 font-bold p-2 rounded"
+      >
+        Add
+      </button>
+
+      <!--  -->
+
+      <div class="kanbanBoard flex gap-4">
+        <div class="todo flex-1 bg-gray-200 min-h-[100px]">
+          <h2 class="bg-amber-700 text-white p-2">TO-DO</h2>
+          <div class="tasks flex flex-col gap-2 p-2"></div>
+        </div>
+
+        <div class="doing flex-1 bg-gray-200 min-h-[100px]">
+          <h2 class="bg-blue-700 text-white p-2">DOING</h2>
+          <div class="tasks flex flex-col gap-2 p-2"></div>
+        </div>
+
+        <div class="done flex-1 bg-gray-200 min-h-[100px]">
+          <h2 class="bg-cyan-700 text-white p-2">DONE</h2>
+          <div class="tasks flex flex-col gap-2 p-2"></div>
+        </div>
+      </div>
+
+      <!--  -->
+      <div
+        class="task-popup pointer-events-none border-2 p-4 w-1/2 absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-500"
+      >
+        <textarea
+          placeholder="Description"
+          class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          id="addDescriptionInput"
+        ></textarea>
+        <div class="actions mt-4 flex flex-row gap-4">
+          <button
+            data-type="todo"
+            class="type cursor-pointer bg-amber-500 hover:bg-amber-700 text-white font-bold p-2 rounded"
+          >
+            To-Do
+          </button>
+          <button
+            data-type="doing"
+            class="type cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold p-2 rounded"
+          >
+            Doing
+          </button>
+          <button
+            data-type="done"
+            class="type cursor-pointer bg-cyan-500 hover:bg-cyan-700 text-white font-bold p-2 rounded"
+          >
+            Done
+          </button>
+        </div>
+        <button
+          class="button-save-task block ml-auto bg-green-500 hover:bg-green-700 text-white mt-2 font-bold p-2 rounded "
+        >
+          Save
+        </button>
+        <span
+          class="exit absolute text-2xl bg-red-100 rounded-full top-0 right-0 text-red-500 translate-x-1/2 -translate-y-1/2"
+          ><i class="fa-solid fa-xmark"></i
+        ></span>
+      </div>
+
+    </section>
+
+    <script src="./main.js"></script>
+  </body>
+</html>
