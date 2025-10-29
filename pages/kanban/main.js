@@ -8,13 +8,16 @@ let lastId = 4;
 let currentlyEdited = 0;
 
 const taskPopup = document.querySelector(".task-popup");
-
 const addDescriptionInput = document.getElementById("addDescriptionInput");
+let types = document.querySelectorAll(".type");
+let typeSelected;
+
+const tasksDiv = document.querySelectorAll(".task");
+const tasksContainers = document.querySelectorAll(".tasks");
+
 const todoTasks = document.querySelector(".todo .tasks");
 const doingTasks = document.querySelector(".doing .tasks");
 const doneTasks = document.querySelector(".done .tasks");
-let types = document.querySelectorAll(".type");
-let typeSelected;
 
 const fillTasks = () => {
   todoTasks.innerHTML = "";
@@ -42,7 +45,8 @@ const fillTasks = () => {
     taskDiv.append(deleteButton);
 
     taskDiv.setAttribute("data-id", task.id);
-    taskDiv.setAttribute("data-type", task.type);
+    // taskDiv.setAttribute("data-type", task.type);
+    taskDiv.setAttribute("draggable", true);
 
     taskDiv.className =
       "task flex justify-between bg-white p-2 rounded shadow cursor-pointer hover:bg-gray-200";
@@ -54,6 +58,13 @@ const fillTasks = () => {
     } else if (task.type === "done") {
       doneTasks.appendChild(taskDiv);
     }
+
+    taskDiv.addEventListener("dragstart", () => {
+      taskDiv.classList.add("dragging");
+    });
+    taskDiv.addEventListener("dragend", () => {
+      taskDiv.classList.remove("dragging");
+    });
 
     taskDiv.addEventListener("click", (e) => {
       // const id = e.target.getAttribute("data-id");
@@ -81,8 +92,9 @@ document.querySelector(".button-save-task").addEventListener("click", () => {
   } else {
     tasks = tasks.map((task) =>
       task.id == currentlyEdited
-    ? { ...task, description, type: typeSelected }
-    : task);
+        ? { ...task, description, type: typeSelected }
+        : task
+    );
     currentlyEdited = 0;
   }
 
@@ -130,3 +142,23 @@ function openPopupAnimation() {
   taskPopup.classList.remove("opacity-0", "pointer-events-none");
   taskPopup.classList.add("opacity-100");
 }
+
+tasksContainers.forEach((container) => {
+  container.addEventListener("dragover", () => {
+    const element = document.querySelector(".dragging");
+    console.log(container, element);
+
+    updateTaskTypeInDragging(container, element);
+    container.appendChild(element);
+  });
+});
+
+function updateTaskTypeInDragging(container, element) {
+  const type = container.getAttribute("data-type");
+  const id = element.getAttribute("data-id");
+  tasks = tasks.map((task, i) => {
+    return { ...task, type: task.id == id ? type : task.type };
+  });
+  console.log(tasks, type, id);
+}
+
