@@ -37,26 +37,26 @@ function getWeekDays(pagination = 0) {
 let reservations = {
   "2025-10-27": [
     {
-      startHour: "10",
-      startMin: "30",
-      endHour: "12",
-      endMin: "00",
+      startHour: 10,
+      startMin: 30,
+      endHour: 12,
+      endMin: 0,
       title: "Meeting",
     },
     {
-      startHour: "2",
-      startMin: "30",
-      endHour: "4",
-      endMin: "00",
+      startHour: 2,
+      startMin: 30,
+      endHour: 4,
+      endMin: 30,
       title: "Meeting2",
     },
   ],
   "2025-10-28": [
     {
-      startHour: "14",
-      startMin: "00",
-      endHour: "15",
-      endMin: "30",
+      startHour: 14,
+      startMin: 0,
+      endHour: 15,
+      endMin: 30,
       title: "Lunch",
     },
   ],
@@ -75,16 +75,18 @@ function isItAlreadyReserved(date, startHour, startMin, endHour, endMin) {
   startTime = startHour * 60 + startMin;
   endTime = endHour * 60 + endMin;
 
-
   for (const event of reservations[date]) {
-    takendStartTime = +event.startHour * 60 + +event.startMin;
-    takendEndTime = +event.endHour * 60 + +event.endMin;
+    takendStartTime = event.startHour * 60 + event.startMin;
+    takendEndTime = event.endHour * 60 + event.endMin;
 
-    if (startTime >= takendStartTime && startTime < takendEndTime) {
-      console.log("you reservation can't start here");
+    if (
+      (startTime >= takendStartTime && startTime < takendEndTime) ||
+      (endTime < takendStartTime && endTime >= takendStartTime)
+    ) {
+      alert("reservation false");
       return false;
-    } else if (endTime < takendStartTime && endTime >= takendStartTime) {
-      console.log("your reservation can't end here");
+    } else if (startTime < takendStartTime && endTime > startTime) {
+      alert("reservation false");
       return false;
     }
   }
@@ -92,8 +94,47 @@ function isItAlreadyReserved(date, startHour, startMin, endHour, endMin) {
   return true;
 }
 
-function printReservation(reservation) {}
+const reservationSpacing = {
+  0: 0,
+  15: 25,
+  30: 50,
+  45: 75,
+};
 
+function printNewReservation(newReservation, date) {
+  // date = "2025-10-27";
+  // newReservation = reservations["2025-10-27"][0];
+  // console.log(date,newReservation);
+
+  const element = document.querySelector(
+    `[data-date="${date}"][data-hour="${newReservation.startHour}"]`
+  );
+  // console.log(element);
+  element.style.position = "relative";
+
+  const reservationElement = document.createElement("div");
+  reservationElement.innerHTML = `
+    ${newReservation.title}
+  `;
+  // console.log(reservationSpacing[newReservation.startMin]);
+  let top = reservationSpacing[newReservation.startMin];
+  startTime = newReservation.startHour * 60 + newReservation.startMin;
+  endTime = newReservation.endHour * 60 + newReservation.endMin;
+  let height = endTime - startTime;
+  console.log(height);
+
+  reservationElement.style.cssText = `
+    position: absolute;
+    top: ${top}%;
+    height: ${height}px;
+    left: 0;
+    width: 100%;
+    background-color: blue;
+    color: white;
+    padding: 10px;
+    `;
+  element.appendChild(reservationElement);
+}
 save.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -105,25 +146,25 @@ save.addEventListener("click", (e) => {
   const endHour = +endHourInput.value;
   const endMin = +endMinInput.value;
 
-  // if (!eventDate) {
-  //   alert("Please select a date.");
-  //   return;
-  // }
-  // if (!title) {
-  //   alert("Please enter a title.");
-  //   return;
-  // }
-  // if (!numberOfPeople || numberOfPeople <= 0) {
-  //   alert("Number of persons must be greater than 0.");
-  //   return;
-  // }
-  // if (startHour === "" || startMin === "" || endHour === "" || endMin === "") {
-  //   alert("Please fill in start and end time.");
-  //   return;
-  // }
+  if (!eventDate) {
+    alert("Please select a date.");
+    return;
+  }
+  if (!title) {
+    alert("Please enter a title.");
+    return;
+  }
+  if (!numberOfPeople || numberOfPeople <= 0) {
+    alert("Number of persons must be greater than 0.");
+    return;
+  }
+  if (startHour === "" || startMin === "" || endHour === "" || endMin === "") {
+    alert("Please fill in start and end time.");
+    return;
+  }
 
   if (isItAlreadyReserved(eventDate, startHour, startMin, endHour, endMin)) {
-    reservations[eventDate] = {
+    const newReservation = {
       title,
       numberOfPeople,
       startHour,
@@ -131,6 +172,9 @@ save.addEventListener("click", (e) => {
       endHour,
       endMin,
     };
+
+    reservations[eventDate] = newReservation;
+    printNewReservation(newReservation, eventDate);
     popup.style.display = "none";
   }
 });
@@ -159,7 +203,8 @@ function printDays() {
   days.forEach((element, i) => {
     let day = craeteField();
     day.setAttribute("data-date", element.date);
-    day.innerText = element.day;
+    // day.innerText = element.day;
+    day.innerHTML = `<span>${element.day}</span></br><span>${element.date}</span>`;
     calender.append(day);
   });
 }
@@ -180,12 +225,21 @@ function printHours() {
       calender.append(field);
     }
   }
+  printReservations();
 }
 
 function craeteField() {
   let field = document.createElement("div");
-  field.classList.add("border", "p-2", "text-center");
+  field.classList.add("border", "p-2", "text-center", "h-[60px]");
   return field;
+}
+function printReservations() {
+  for (const reservation in reservations) {
+    const date = reservation;
+    for (const res of reservations[date]) {
+      printNewReservation(res, date);
+    }
+  }
 }
 printDays();
 printHours();

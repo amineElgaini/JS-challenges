@@ -25,7 +25,7 @@
         <button id="createReservation" class="border p-1">Create</button>
       </div>
 
-      <div id="calender" class="grid grid-cols-8"></div>
+      <div id="calender" class="grid grid-cols-[50px_repeat(7,1fr)]"></div>
     </main>
 
     <section
@@ -55,7 +55,6 @@
           >
           <input
             type="text"
-            required
             id="eventTitle"
             placeholder="Enter event title"
             class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -70,7 +69,6 @@
           <input
             id="event-date"
             type="date"
-            required
             class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
@@ -82,7 +80,6 @@
           >
           <input
             type="number"
-            required
             id="persons"
             min="1"
             placeholder="Enter number of persons"
@@ -98,7 +95,6 @@
               id="start-hour"
               type="number"
               min="0"
-              required
               max="23"
               placeholder="HH"
               class="w-1/2 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -107,7 +103,6 @@
               id="start-min"
               type="number"
               min="0"
-              required
               max="59"
               placeholder="MM"
               class="w-1/2 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -123,7 +118,6 @@
               id="end-hour"
               type="number"
               min="0"
-              required
               max="23"
               placeholder="HH"
               class="w-1/2 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -132,7 +126,6 @@
               id="end-min"
               type="number"
               min="0"
-              required
               max="59"
               placeholder="MM"
               class="w-1/2 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
