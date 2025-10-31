@@ -23,4 +23,4 @@ It allows users to create, edit, and delete events through a clean popup interfa
 ## ⚙️ Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/event-scheduler.git
+   git clone https://github.com/amineElgaini/js-challenges.git
