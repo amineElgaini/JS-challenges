@@ -10,6 +10,7 @@ const startMinInput = document.getElementById("start-min");
 const endHourInput = document.getElementById("end-hour");
 const endMinInput = document.getElementById("end-min");
 const popupmode = document.getElementById("popupmode");
+const deleteButton = document.getElementById("delete");
 
 const save = document.getElementById("save");
 
@@ -88,14 +89,9 @@ function isItAlreadyReserved(date, startHour, startMin, endHour, endMin) {
     takendStartTime = event.startHour * 60 + event.startMin;
     takendEndTime = event.endHour * 60 + event.endMin;
 
-    console.log(event.startHour, event.startMin, event.endHour, event.endMin);
-    console.log(
-      event.startHour * 60 + event.startMin,
-      event.endHour * 60 + event.endMin
-    );
+    if (currentlyEditedReservationDate ==  date && index == currentlyEditedReservationIndex) {
+      continue;
 
-    if (index == currentlyEditedReservationIndex) {
-      return true;
     } else if (
       (startTime >= takendStartTime && startTime < takendEndTime) ||
       (endTime < takendStartTime && endTime >= takendStartTime)
@@ -108,10 +104,8 @@ function isItAlreadyReserved(date, startHour, startMin, endHour, endMin) {
     } else if (endTime < startTime) {
       alert("reservation false 2");
       return false;
-
     }
   }
-  // console.log("will be pushed");
   return true;
 }
 
@@ -183,8 +177,23 @@ function printNewReservation(newReservation, date, index) {
 
     popupmode.innerText = `Update Reservation: ${reservation.title}`;
     popup.style.display = "block";
+    deleteButton.style.display = "block";
   });
 }
+
+// delete logic
+deleteButton.addEventListener("click", (e)=>{
+  
+    reservations[currentlyEditedReservationDate].splice(currentlyEditedReservationIndex, 1);
+    calender.innerHTML = "";
+
+    printDays();
+    printHours();
+    deleteButton.style.display = "none";
+    popup.style.display = "none";
+    currentlyEditedReservationDate = "";
+    currentlyEditedReservationIndex = -1;
+});
 
 save.addEventListener("click", (e) => {
   e.preventDefault();
@@ -224,15 +233,13 @@ save.addEventListener("click", (e) => {
       endMin,
     };
 
-    let index = -1;
-
     if (currentlyEditedReservationIndex >= 0 ) {
       if (currentlyEditedReservationDate !== eventDate) {
 
         reservations[currentlyEditedReservationDate].splice(currentlyEditedReservationIndex, 1);
         
         reservations[eventDate] ||= [];
-        index = reservations[eventDate].push(newReservation) - 1;
+        reservations[eventDate].push(newReservation) - 1;
 
       } else {
         reservations[currentlyEditedReservationDate][
@@ -240,14 +247,11 @@ save.addEventListener("click", (e) => {
         ] = newReservation; // this will create another one
       }
 
-      index = currentlyEditedReservationIndex;
     } else {
       reservations[eventDate] ||= [];
-      index = reservations[eventDate].push(newReservation) - 1;
-      console.log("edited");
+      reservations[eventDate].push(newReservation) - 1;
     }
 
-    // printNewReservation(newReservation, eventDate, index);
     calender.innerHTML = "";
 
     printDays();

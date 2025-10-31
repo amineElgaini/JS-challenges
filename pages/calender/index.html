@@ -67,7 +67,10 @@
       </button>
 
       <!-- Modal Title -->
-      <h2 id="popupmode" class="text-2xl font-semibold mb-4 text-center text-gray-800">
+      <h2
+        id="popupmode"
+        class="text-2xl font-semibold mb-4 text-center text-gray-800"
+      >
         New Event
       </h2>
 
@@ -158,15 +161,25 @@
           </div>
         </div>
 
-        <!-- Submit Button -->
         <div class="text-center">
-          <button
-            id="save"
-            type="submit"
-            class="bg-blue-500 text-white font-semibold px-6 py-2 rounded hover:bg-blue-600 transition"
-          >
-            Submit
-          </button>
+          <div class="flex justify-center space-x-4 mt-4">
+            <button
+              id="save"
+              type="submit"
+              class="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-600 active:bg-blue-700 transition duration-200"
+            >
+              Save
+            </button>
+
+            <button
+              style="display: none;"
+              id="delete"
+              type="button"
+              class="bg-red-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-red-600 active:bg-red-700 transition duration-200"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </form>
     </section>
