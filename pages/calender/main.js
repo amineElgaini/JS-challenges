@@ -442,3 +442,4 @@ closeBtn.addEventListener("click", () => {
   popup.style.display = "none";
   deleteButton.style.display = "none";
 });
+
