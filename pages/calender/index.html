@@ -15,23 +15,48 @@
   </head>
 
   <body>
-    <main class="py-20 container mx-auto">
-      <h1 class="text-center text-5xl">Calender</h1>
-      <div class="actions flex justify-between">
-        <div class="pagination">
-          <button id="left" class="border p-1">Left</button>
-          <button id="right" class="border p-1">Right</button>
+    <main class="py-16 container mx-auto px-6">
+      <h1 class="text-center text-5xl font-bold text-blue-600 mb-10">
+        Calendar
+      </h1>
+
+      <!-- Actions -->
+      <div
+        class="actions flex justify-between items-center bg-white p-4 rounded-lg shadow-sm mb-8"
+      >
+        <div class="pagination flex gap-3">
+          <button
+            id="left"
+            class="border border-gray-300 rounded-md px-3 py-1 hover:bg-gray-100 transition"
+          >
+            <i class="fa-solid fa-chevron-left"></i> Prev
+          </button>
+          <button
+            id="right"
+            class="border border-gray-300 rounded-md px-3 py-1 hover:bg-gray-100 transition"
+          >
+            Next <i class="fa-solid fa-chevron-right"></i>
+          </button>
         </div>
-        <button id="createReservation" class="border p-1">Create</button>
+        <button
+          id="createReservation"
+          class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+        >
+          + New Event
+        </button>
       </div>
 
-      <div id="calender" class="grid grid-cols-[50px_repeat(7,1fr)]"></div>
+      <!-- Calendar Grid -->
+      <div
+        id="calender"
+        class="grid grid-cols-[60px_repeat(7,1fr)] bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200"
+      ></div>
     </main>
 
     <section
       style="display: none"
       id="popup"
-      class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg p-6 w-96"
+      class="fixed z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg p-6 w-96"
     >
       <!-- Close Button -->
       <button
@@ -42,7 +67,7 @@
       </button>
 
       <!-- Modal Title -->
-      <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800">
+      <h2 id="popupmode" class="text-2xl font-semibold mb-4 text-center text-gray-800">
         New Event
       </h2>
 
@@ -145,21 +170,6 @@
         </div>
       </form>
     </section>
-
-    <!-- JS to close popup -->
-    <script>
-      const popup = document.getElementById("popup");
-      const createReservation = document.getElementById("createReservation");
-      const closeBtn = document.getElementById("closePopup");
-
-      createReservation.addEventListener("click", () => {
-        popup.style.display = "block";
-      });
-
-      closeBtn.addEventListener("click", () => {
-        popup.style.display = "none";
-      });
-    </script>
 
     <script src="./main.js"></script>
   </body>
