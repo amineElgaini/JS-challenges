@@ -1,0 +1,17 @@
+.custom-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.5s, transform 0.5s;
+  transform: translateY(20px);
+  z-index: 9999;
+}
+.custom-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}

@@ -1,3 +1,9 @@
+const types = {
+  vip: "bg-red-600",
+  standard: "bg-green-500",
+  groupe: "bg-blue-600",
+};
+
 const calender = document.getElementById("calender");
 const paginateLeft = document.getElementById("left");
 const paginateRight = document.getElementById("right");
@@ -11,6 +17,7 @@ const endHourInput = document.getElementById("end-hour");
 const endMinInput = document.getElementById("end-min");
 const popupmode = document.getElementById("popupmode");
 const deleteButton = document.getElementById("delete");
+const eventType = document.getElementById("eventType");
 
 const save = document.getElementById("save");
 
@@ -43,6 +50,7 @@ let reservations = {
   "2025-10-27": [
     {
       startHour: 10,
+      type: "standard",
       startMin: 30,
       endHour: 12,
       endMin: 0,
@@ -50,6 +58,7 @@ let reservations = {
       numberOfPeople: 3,
     },
     {
+      type: "groupe",
       startHour: 2,
       startMin: 30,
       endHour: 4,
@@ -60,6 +69,7 @@ let reservations = {
   ],
   "2025-10-28": [
     {
+      type: "vip",
       startHour: 14,
       startMin: 0,
       endHour: 15,
@@ -78,7 +88,9 @@ let currentlyEditedReservationIndex = -1;
 
 function isItAlreadyReserved(date, startHour, startMin, endHour, endMin) {
   if (!reservations[date]) {
-    return true;
+    console.log("test");
+    showToast("Saved successfully!");
+    return false;
   }
 
   startTime = startHour * 60 + startMin;
@@ -89,24 +101,47 @@ function isItAlreadyReserved(date, startHour, startMin, endHour, endMin) {
     takendStartTime = event.startHour * 60 + event.startMin;
     takendEndTime = event.endHour * 60 + event.endMin;
 
-    if (currentlyEditedReservationDate ==  date && index == currentlyEditedReservationIndex) {
+    console.log("test");
+    if (
+      currentlyEditedReservationDate == date &&
+      index == currentlyEditedReservationIndex
+    ) {
       continue;
-
     } else if (
       (startTime >= takendStartTime && startTime < takendEndTime) ||
       (endTime < takendStartTime && endTime >= takendStartTime)
     ) {
       alert("reservation false 1");
+      showToast("Saved successfully!");
       return false;
     } else if (startTime < takendStartTime && endTime > takendStartTime) {
       alert("reservation false 2");
+      showToast("Saved successfully!");
       return false;
     } else if (endTime < startTime) {
       alert("reservation false 2");
+      showToast("Saved successfully!");
       return false;
     }
   }
   return true;
+}
+
+showToast("test");
+
+function showToast(message, color) {
+  const toast = document.createElement("div");
+  toast.classList.add("custom-toast", color);
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("show"), 100);
+  console.log("hi");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
 }
 
 const reservationSpacing = {
@@ -135,6 +170,7 @@ function printNewReservation(newReservation, date, index) {
   endTime = newReservation.endHour * 60 + newReservation.endMin;
   let height = endTime - startTime;
 
+  reservationElement.classList.add(types[newReservation.type]);
   reservationElement.style.cssText = `
   position: absolute;
   z-index: 2;
@@ -143,7 +179,6 @@ function printNewReservation(newReservation, date, index) {
   left: 4px;
   right: 4px;
   border-radius: 0.5rem;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   padding: 6px 8px;
   font-size: 0.85rem;
@@ -174,6 +209,7 @@ function printNewReservation(newReservation, date, index) {
     startMinInput.value = reservation.startMin;
     endHourInput.value = reservation.endHour;
     endMinInput.value = reservation.endMin;
+    eventType.value = reservation.type;
 
     popupmode.innerText = `Update Reservation: ${reservation.title}`;
     popup.style.display = "block";
@@ -182,18 +218,30 @@ function printNewReservation(newReservation, date, index) {
 }
 
 // delete logic
-deleteButton.addEventListener("click", (e)=>{
-  
-    reservations[currentlyEditedReservationDate].splice(currentlyEditedReservationIndex, 1);
-    calender.innerHTML = "";
+deleteButton.addEventListener("click", (e) => {
+  reservations[currentlyEditedReservationDate].splice(
+    currentlyEditedReservationIndex,
+    1
+  );
+  calender.innerHTML = "";
 
-    printDays();
-    printHours();
-    deleteButton.style.display = "none";
-    popup.style.display = "none";
-    currentlyEditedReservationDate = "";
-    currentlyEditedReservationIndex = -1;
+  printDays();
+  printHours();
+  deleteButton.style.display = "none";
+  popup.style.display = "none";
+  currentlyEditedReservationDate = "";
+  currentlyEditedReservationIndex = -1;
 });
+
+function isNotAValidDate(eventDate) {
+  const date = new Date(eventDate);
+  const day = date.getDay(); // 0 = Sunday, 6 = Saturday
+
+  if (day === 0 || day === 6) {
+    return true;
+  }
+  return false;
+}
 
 save.addEventListener("click", (e) => {
   e.preventDefault();
@@ -205,6 +253,7 @@ save.addEventListener("click", (e) => {
   const startMin = +startMinInput.value;
   const endHour = +endHourInput.value;
   const endMin = +endMinInput.value;
+  const type = eventType.value;
 
   if (!eventDate) {
     alert("Please select a date.");
@@ -223,6 +272,16 @@ save.addEventListener("click", (e) => {
     return;
   }
 
+  if (!(type in types)) {
+    alert("Enter a type.");
+    return;
+  }
+
+  if (isNotAValidDate(eventDate)) {
+    alert("you can't reserve in weekend");
+    return;
+  }
+
   if (isItAlreadyReserved(eventDate, startHour, startMin, endHour, endMin)) {
     const newReservation = {
       title,
@@ -231,22 +290,23 @@ save.addEventListener("click", (e) => {
       startMin,
       endHour,
       endMin,
+      type
     };
 
-    if (currentlyEditedReservationIndex >= 0 ) {
+    if (currentlyEditedReservationIndex >= 0) {
       if (currentlyEditedReservationDate !== eventDate) {
+        reservations[currentlyEditedReservationDate].splice(
+          currentlyEditedReservationIndex,
+          1
+        );
 
-        reservations[currentlyEditedReservationDate].splice(currentlyEditedReservationIndex, 1);
-        
         reservations[eventDate] ||= [];
         reservations[eventDate].push(newReservation) - 1;
-
       } else {
         reservations[currentlyEditedReservationDate][
           currentlyEditedReservationIndex
         ] = newReservation; // this will create another one
       }
-
     } else {
       reservations[eventDate] ||= [];
       reservations[eventDate].push(newReservation) - 1;
@@ -278,20 +338,6 @@ paginateRight.addEventListener("click", (e) => {
   printHours();
 });
 
-// function printDays() {
-//   const emptyField = craeteField();
-//   emptyField.innerText = "-";
-//   calender.append(emptyField);
-
-//   days.forEach((element, i) => {
-//     let day = craeteField();
-//     day.setAttribute("data-date", element.date);
-//     // day.innerText = element.day;
-//     day.innerHTML = `<span>${element.day}</span></br><span>${element.date}</span>`;
-//     calender.append(day);
-//   });
-// }
-
 function printDays() {
   const emptyField = craeteField();
   emptyField.innerHTML = `<span class="text-gray-400 font-semibold">#</span>`;
@@ -314,6 +360,7 @@ function printDays() {
 
 function printHours() {
   for (let i = 0; i < 24; i++) {
+    
     // print hours
     let field = craeteField();
     field.innerText = i;
@@ -331,22 +378,14 @@ function printHours() {
   printReservations();
 }
 
-// function craeteField() {
-//   let field = document.createElement("div");
-//   field.classList.add("border", "p-2", "text-center", "h-[60px]");
-//   return field;
-// }
-
 function craeteField() {
   const field = document.createElement("div");
-  // field.classList.add("border", "p-2", "text-center", "h-[60px]");
 
   field.classList.add(
     "border",
     "border-gray-200",
     "p-2",
     "text-center",
-    // "relative",
     "h-[60px]",
     "bg-white",
     "hover:bg-gray-50",
@@ -363,21 +402,35 @@ function printReservations() {
     }
   }
 }
+
 printDays();
 printHours();
 
+
+
 createReservation.addEventListener("click", () => {
+
   popupmode.innerText = `New Reservation`;
-  eventTitleInput.value = "";
-  eventDateInput.value = "";
-  personsInput.value = "";
-  startHourInput.value = "";
-  startMinInput.value = "";
-  endHourInput.value = "";
-  endMinInput.value = "";
+  eventTitleInput.value = "test";
+  eventDateInput.value = "2025-11-11";
+  personsInput.value = 2;
+  startHourInput.value = 10;
+  startMinInput.value = 0;
+  endHourInput.value = 12;
+  endMinInput.value = 0;
+
+  // eventTitleInput.value = "";
+  // eventDateInput.value = "";
+  // personsInput.value = "";
+  // startHourInput.value = "";
+  // startMinInput.value = "";
+  // endHourInput.value = "";
+  // endMinInput.value = "";
+
   popup.style.display = "block";
 });
 
 closeBtn.addEventListener("click", () => {
   popup.style.display = "none";
+  deleteButton.style.display = "none";
 });

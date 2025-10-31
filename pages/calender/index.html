@@ -11,9 +11,9 @@
       referrerpolicy="no-referrer"
     />
     <link href="./../../output.css" rel="stylesheet" />
+    <link href="./style.css" rel="stylesheet" />
     <title>Document</title>
   </head>
-
   <body>
     <main class="py-16 container mx-auto px-6">
       <h1 class="text-center text-5xl font-bold text-blue-600 mb-10">
@@ -22,7 +22,7 @@
 
       <!-- Actions -->
       <div
-        class="actions flex justify-between items-center bg-white p-4 rounded-lg shadow-sm mb-8"
+        class="agctions flex justify-between items-center bg-white p-4 rounded-lg shadow-sm mb-8"
       >
         <div class="pagination flex gap-3">
           <button
@@ -161,6 +161,21 @@
           </div>
         </div>
 
+        <!-- Type -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1" for="eventType">
+            Type
+          </label>
+          <select
+            id="eventType"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          >
+            <option selected value="vip">VIP</option>
+            <option value="standard">Standard</option>
+            <option value="groupe">Groupe</option>
+          </select>
+        </div>
+
         <div class="text-center">
           <div class="flex justify-center space-x-4 mt-4">
             <button
@@ -172,7 +187,7 @@
             </button>
 
             <button
-              style="display: none;"
+              style="display: none"
               id="delete"
               type="button"
               class="bg-red-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-red-600 active:bg-red-700 transition duration-200"
